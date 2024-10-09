@@ -2,7 +2,7 @@ import streamlit as st
 import time
 
 # Constants for the Wordle game
-WORD = 'AMBER'
+WORD = 'PAKIS'
 MAX_ATTEMPTS = 6
 WORD_LENGTH = 5
 
@@ -120,9 +120,10 @@ if user_name:
             cols = st.columns(len(row))
             for idx, letter in enumerate(row):
                 button_color = 'lightgrey' if letter not in st.session_state.used_letters else st.session_state.used_letters[letter]
-                if cols[idx].button(letter, key=letter, help=f"Letter: {letter}", disabled=(st.session_state.used_letters.get(letter) == 'grey')):
+                if cols[idx].button(letter, key=f'keyboard_{letter}', help=f"Letter: {letter}", disabled=(st.session_state.used_letters.get(letter) == 'grey')):
                     if len(st.session_state.current_guess) < WORD_LENGTH:
                         st.session_state.current_guess += letter
+st.experimental_rerun()
 
         # Delete button
         if st.button("Delete"):
