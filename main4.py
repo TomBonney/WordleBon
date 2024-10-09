@@ -2,7 +2,7 @@ import streamlit as st
 import time
 
 # Constants for the Wordle game
-WORD = 'AMBER'
+WORD = 'PAKIS'
 MAX_ATTEMPTS = 6
 WORD_LENGTH = 5
 
