@@ -2,7 +2,7 @@ import streamlit as st
 import time
 
 # Constants for the Wordle game
-WORD = 'AMBER'
+WORD = 'PAKIS'
 MAX_ATTEMPTS = 6
 WORD_LENGTH = 5
 
@@ -40,6 +40,15 @@ if 'used_letters' not in st.session_state:
     st.session_state.used_letters = {}  # To store the status of each letter: 'green', 'yellow', 'grey'
 if 'game_complete' not in st.session_state:
     st.session_state.game_complete = False
+
+# Function to handle letter input dynamically
+def add_letter(letter):
+    if len(st.session_state.current_guess) < WORD_LENGTH:
+        st.session_state.current_guess += letter
+
+# Function to handle deletion of a letter
+def delete_letter():
+    st.session_state.current_guess = st.session_state.current_guess[:-1]
 
 # Start of the Streamlit app
 st.title('Wordle Game - Guess the Word!')
@@ -120,15 +129,10 @@ if user_name:
             cols = st.columns(len(row))
             for idx, letter in enumerate(row):
                 button_color = 'lightgrey' if letter not in st.session_state.used_letters else st.session_state.used_letters[letter]
-                if cols[idx].button(letter, key=letter, help=f"Letter: {letter}", disabled=(st.session_state.used_letters.get(letter) == 'grey')):
-                    if len(st.session_state.current_guess) < WORD_LENGTH:
-                        st.session_state.current_guess += letter  # Update session state when a letter is clicked
-                        time.sleep(0.1)  # Introduce a brief delay to allow the UI to refresh immediately
+                cols[idx].button(letter, on_click=add_letter, args=(letter,))  # Pass letter to add_letter callback
 
         # Delete button
-        if st.button("Delete"):
-            if len(st.session_state.current_guess) > 0:
-                st.session_state.current_guess = st.session_state.current_guess[:-1]  # Remove the last character
+        st.button("Delete", on_click=delete_letter)
 
         # Submit guess button
         if st.button("Submit Guess") and len(st.session_state.current_guess) == WORD_LENGTH:
