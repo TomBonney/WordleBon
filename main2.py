@@ -123,6 +123,7 @@ if user_name:
                 if cols[idx].button(letter, key=letter, help=f"Letter: {letter}", disabled=(st.session_state.used_letters.get(letter) == 'grey')):
                     if len(st.session_state.current_guess) < WORD_LENGTH:
                         st.session_state.current_guess += letter  # Update session state when a letter is clicked
+                        time.sleep(0.1)  # Introduce a brief delay to allow the UI to refresh immediately
 
         # Delete button
         if st.button("Delete"):
