@@ -123,7 +123,7 @@ if user_name:
                 if cols[idx].button(letter, key=f'keyboard_{letter}', help=f"Letter: {letter}", disabled=(st.session_state.used_letters.get(letter) == 'grey')):
                     if len(st.session_state.current_guess) < WORD_LENGTH:
                         st.session_state.current_guess += letter
-st.experimental_rerun()
+                        st.experimental_rerun()
 
         # Delete button
         if st.button("Delete"):
