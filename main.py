@@ -116,31 +116,21 @@ if user_name:
             ['Z', 'X', 'C', 'V', 'B', 'N', 'M']
         ]
 
-        # Create a container for the keyboard to update dynamically
-        keyboard_container = st.empty()
-
-        with keyboard_container.container():
-            for row in keyboard:
-                cols = st.columns(len(row))
-                for idx, letter in enumerate(row):
-                    button_color = 'lightgrey' if letter not in st.session_state.used_letters else st.session_state.used_letters[letter]
-                    cols[idx].button(letter, key=f'keyboard_{letter}_{st.session_state.attempts}', help=f"Letter: {letter}", disabled=(st.session_state.used_letters.get(letter) == 'grey'))
-
-        # Confirm button to add current letter to the guess
-        if st.button("Confirm Letter", key=f'confirm_{st.session_state.attempts}'):
-            for row in keyboard:
-                for letter in row:
-                    if st.session_state.get(f'keyboard_{letter}_{st.session_state.attempts}'):
-                        if len(st.session_state.current_guess) < WORD_LENGTH:
-                            st.session_state.current_guess += letter
+        for row in keyboard:
+            cols = st.columns(len(row))
+            for idx, letter in enumerate(row):
+                button_color = 'lightgrey' if letter not in st.session_state.used_letters else st.session_state.used_letters[letter]
+                if cols[idx].button(letter, key=f'keyboard_{letter}_{st.session_state.attempts}', help=f"Letter: {letter}", disabled=(st.session_state.used_letters.get(letter) == 'grey')):
+                    if len(st.session_state.current_guess) < WORD_LENGTH:
+                        st.session_state.current_guess += letter
 
         # Delete button
-        if st.button("Delete", key=f'delete_{st.session_state.attempts}'):
+        if st.button("Delete"):
             if len(st.session_state.current_guess) > 0:
                 st.session_state.current_guess = st.session_state.current_guess[:-1]
 
         # Submit guess button
-        if st.button("Submit Guess", key=f'submit_{st.session_state.attempts}') and len(st.session_state.current_guess) == WORD_LENGTH:
+        if st.button("Submit Guess") and len(st.session_state.current_guess) == WORD_LENGTH:
             current_guess = st.session_state.current_guess
             attempt = st.session_state.attempts
 
