@@ -48,9 +48,6 @@ st.title('Wordle Game - Guess the Word!')
 user_name = st.text_input('Enter your name to start:', '')
 
 if user_name:
-    if 'update_needed' in st.session_state and st.session_state.update_needed:
-        st.session_state.update_needed = False
-        st.experimental_rerun()
     st.write(f"Welcome, {user_name}!")
 
     # Grid display
@@ -126,14 +123,11 @@ if user_name:
                 if cols[idx].button(letter, key=letter, help=f"Letter: {letter}", disabled=(st.session_state.used_letters.get(letter) == 'grey')):
                     if len(st.session_state.current_guess) < WORD_LENGTH:
                         st.session_state.current_guess += letter
-                        # Update immediately after pressing a letter
-                        st.session_state.update_needed = True
 
         # Delete button
         if st.button("Delete"):
             if len(st.session_state.current_guess) > 0:
                 st.session_state.current_guess = st.session_state.current_guess[:-1]
-                st.session_state.update_needed = True
 
         # Submit guess button
         if st.button("Submit Guess") and len(st.session_state.current_guess) == WORD_LENGTH:
@@ -170,9 +164,6 @@ if user_name:
 
                 # Mark the game as complete
                 st.session_state.game_complete = True
-
-            # Redraw immediately to update the keyboard and display the congratulations message
-            st.session_state.update_needed = True
 
     # Keep the congratulations or error message visible
     if st.session_state.game_complete:
