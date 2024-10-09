@@ -2,7 +2,7 @@ import streamlit as st
 import time
 
 # Constants for the Wordle game
-WORD = 'PAKIS'
+WORD = 'AMBER'
 MAX_ATTEMPTS = 6
 WORD_LENGTH = 5
 
@@ -53,7 +53,7 @@ if user_name:
     # Grid display
     st.write("Your guesses:")
     for i in range(MAX_ATTEMPTS):
-        row = st.columns(WORD_LENGTH, gap="small")  # Create a row with fixed columns for uniform spacing
+        row = st.columns([1] * WORD_LENGTH, gap="small")  # Use proportional sizing for better scaling on different devices
         for j in range(WORD_LENGTH):
             if i < st.session_state.attempts:
                 # Display feedback for past guesses
@@ -62,11 +62,11 @@ if user_name:
                 row[j].markdown(f"""
                     <div style='
                         text-align:center; 
-                        font-size:40px; 
+                        font-size:min(8vw, 40px);  /* Scales font size for mobile devices */
                         background-color: {color}; 
                         color: black; 
-                        width: 60px; 
-                        height: 60px; 
+                        width: min(12vw, 60px);  /* Scales width for mobile devices */
+                        height: min(12vw, 60px);  /* Scales height for mobile devices */
                         display: flex; 
                         align-items: center; 
                         justify-content: center; 
@@ -80,9 +80,9 @@ if user_name:
                 row[j].markdown(f"""
                     <div style='
                         text-align:center; 
-                        font-size:40px; 
-                        width: 60px; 
-                        height: 60px; 
+                        font-size:min(8vw, 40px);  /* Scales font size for mobile devices */
+                        width: min(12vw, 60px);  /* Scales width for mobile devices */
+                        height: min(12vw, 60px);  /* Scales height for mobile devices */
                         display: flex; 
                         align-items: center; 
                         justify-content: center; 
@@ -96,9 +96,9 @@ if user_name:
                 row[j].markdown(f"""
                     <div style='
                         text-align:center; 
-                        font-size:40px; 
-                        width: 60px; 
-                        height: 60px; 
+                        font-size:min(8vw, 40px);  /* Scales font size for mobile devices */
+                        width: min(12vw, 60px);  /* Scales width for mobile devices */
+                        height: min(12vw, 60px);  /* Scales height for mobile devices */
                         display: flex; 
                         align-items: center; 
                         justify-content: center; 
@@ -173,7 +173,7 @@ if user_name:
     # Keep the grid and feedback visible
     st.write("Your final guesses:")
     for i in range(MAX_ATTEMPTS):
-        row = st.columns(WORD_LENGTH, gap="small")  # Create a row with fixed columns for uniform spacing
+        row = st.columns([1] * WORD_LENGTH, gap="small")  # Use proportional sizing for better scaling on different devices
         for j in range(WORD_LENGTH):
             if i < st.session_state.attempts:
                 # Display feedback for past guesses
@@ -182,17 +182,8 @@ if user_name:
                 row[j].markdown(f"""
                     <div style='
                         text-align:center; 
-                        font-size:40px; 
+                        font-size:min(8vw, 40px);  /* Scales font size for mobile devices */
                         background-color: {color}; 
                         color: black; 
-                        width: 60px; 
-                        height: 60px; 
-                        display: flex; 
-                        align-items: center; 
-                        justify-content: center; 
-                        border-radius: 5px;'>
-                        {letter}
-                    </div>
-                    """, unsafe_allow_html=True)
-
-# Run this with the command: streamlit run <filename>.py
+                        width: min(12vw, 60px);  /* Scales width for mobile devices */
+                        height: min(12vw, 60px);
