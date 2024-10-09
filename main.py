@@ -2,7 +2,7 @@ import streamlit as st
 import time
 
 # Constants for the Wordle game
-WORD = 'PAKIS'
+WORD = 'AMBER'
 MAX_ATTEMPTS = 6
 WORD_LENGTH = 5
 
@@ -165,8 +165,7 @@ if user_name:
                 # Mark the game as complete
                 st.session_state.game_complete = True
 
-            # Only rerun if a condition is met, like game completion
-            if st.session_state.game_complete or current_guess == WORD:
+                # Trigger rerun only after game completion
                 st.experimental_rerun()
 
     # Keep the congratulations or error message visible
