@@ -116,21 +116,25 @@ if user_name:
             ['Z', 'X', 'C', 'V', 'B', 'N', 'M']
         ]
 
-        for row in keyboard:
-            cols = st.columns(len(row))
-            for idx, letter in enumerate(row):
-                button_color = 'lightgrey' if letter not in st.session_state.used_letters else st.session_state.used_letters[letter]
-                if cols[idx].button(letter, key=f'keyboard_{letter}_{st.session_state.attempts}', help=f"Letter: {letter}", disabled=(st.session_state.used_letters.get(letter) == 'grey')):
-                    if len(st.session_state.current_guess) < WORD_LENGTH:
-                        st.session_state.current_guess += letter
-                        st.session_state.current_guess = st.session_state.current_guess  # Trigger an immediate refresh
-                        
+        # Create a container for the keyboard to update dynamically
+        keyboard_container = st.empty()
+
+        with keyboard_container.container():
+            for row in keyboard:
+                cols = st.columns(len(row))
+                for idx, letter in enumerate(row):
+                    button_color = 'lightgrey' if letter not in st.session_state.used_letters else st.session_state.used_letters[letter]
+                    if cols[idx].button(letter, key=f'keyboard_{letter}_{st.session_state.attempts}', help=f"Letter: {letter}", disabled=(st.session_state.used_letters.get(letter) == 'grey')):
+                        if len(st.session_state.current_guess) < WORD_LENGTH:
+                            st.session_state.current_guess += letter
+                            # Refresh the keyboard container immediately
+                            st.experimental_rerun()
 
         # Delete button
         if st.button("Delete", key=f'delete_{st.session_state.attempts}'):
             if len(st.session_state.current_guess) > 0:
                 st.session_state.current_guess = st.session_state.current_guess[:-1]
-                st.session_state.current_guess = st.session_state.current_guess  # Trigger an immediate refresh
+                # Refresh the keyboard container immediately
                 st.experimental_rerun()
 
         # Submit guess button
@@ -168,7 +172,6 @@ if user_name:
 
                 # Mark the game as complete
                 st.session_state.game_complete = True
-                st.experimental_rerun()
 
     # Keep the congratulations or error message visible
     if st.session_state.game_complete:
