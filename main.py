@@ -2,7 +2,7 @@ import streamlit as st
 import time
 
 # Constants for the Wordle game
-WORD = 'AMBER'
+WORD = 'PAKIS'
 MAX_ATTEMPTS = 6
 WORD_LENGTH = 5
 
@@ -123,14 +123,11 @@ if user_name:
                 if cols[idx].button(letter, key=letter, help=f"Letter: {letter}", disabled=(st.session_state.used_letters.get(letter) == 'grey')):
                     if len(st.session_state.current_guess) < WORD_LENGTH:
                         st.session_state.current_guess += letter
-                        # Update immediately after pressing a letter
-                        st.experimental_rerun()
 
         # Delete button
         if st.button("Delete"):
             if len(st.session_state.current_guess) > 0:
                 st.session_state.current_guess = st.session_state.current_guess[:-1]
-                st.experimental_rerun()
 
         # Submit guess button
         if st.button("Submit Guess") and len(st.session_state.current_guess) == WORD_LENGTH:
@@ -168,8 +165,9 @@ if user_name:
                 # Mark the game as complete
                 st.session_state.game_complete = True
 
-            # Redraw immediately to update the keyboard and display the congratulations message
-            st.experimental_rerun()
+            # Only rerun if a condition is met, like game completion
+            if st.session_state.game_complete or current_guess == WORD:
+                st.experimental_rerun()
 
     # Keep the congratulations or error message visible
     if st.session_state.game_complete:
@@ -200,5 +198,3 @@ if user_name:
                         {letter}
                     </div>
                     """, unsafe_allow_html=True)
-
-# Run this with the command: streamlit run <filename>.py
