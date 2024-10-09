@@ -165,9 +165,6 @@ if user_name:
                 # Mark the game as complete
                 st.session_state.game_complete = True
 
-                # Trigger rerun only after game completion
-                st.experimental_rerun()
-
     # Keep the congratulations or error message visible
     if st.session_state.game_complete:
         if 'congratulations_message' in st.session_state:
