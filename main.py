@@ -1,6 +1,5 @@
 import streamlit as st
 import time
-import datetime
 
 # Constants for the Wordle game
 WORD = 'AMBER'
@@ -41,8 +40,6 @@ if 'used_letters' not in st.session_state:
     st.session_state.used_letters = {}  # To store the status of each letter: 'green', 'yellow', 'grey'
 if 'game_complete' not in st.session_state:
     st.session_state.game_complete = False
-if 'last_interaction' not in st.session_state:
-    st.session_state.last_interaction = datetime.datetime.now()
 
 # Start of the Streamlit app
 st.title('Wordle Game - Guess the Word!')
@@ -126,13 +123,11 @@ if user_name:
                 if cols[idx].button(letter, key=f'keyboard_{letter}', help=f"Letter: {letter}", disabled=(st.session_state.used_letters.get(letter) == 'grey')):
                     if len(st.session_state.current_guess) < WORD_LENGTH:
                         st.session_state.current_guess += letter
-                        st.session_state.last_interaction = datetime.datetime.now()
 
         # Delete button
         if st.button("Delete"):
             if len(st.session_state.current_guess) > 0:
                 st.session_state.current_guess = st.session_state.current_guess[:-1]
-                st.session_state.last_interaction = datetime.datetime.now()
 
         # Submit guess button
         if st.button("Submit Guess") and len(st.session_state.current_guess) == WORD_LENGTH:
@@ -169,7 +164,6 @@ if user_name:
 
                 # Mark the game as complete
                 st.session_state.game_complete = True
-                st.session_state.last_interaction = datetime.datetime.now()
 
     # Keep the congratulations or error message visible
     if st.session_state.game_complete:
