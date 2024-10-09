@@ -40,6 +40,12 @@ if 'used_letters' not in st.session_state:
     st.session_state.used_letters = {}  # To store the status of each letter: 'green', 'yellow', 'grey'
 if 'game_complete' not in st.session_state:
     st.session_state.game_complete = False
+if 'key_count' not in st.session_state:
+    st.session_state.key_count = 0
+
+# Force UI refresh by using query params
+if 'updated' in st.experimental_get_query_params():
+    st.experimental_set_query_params()
 
 # Start of the Streamlit app
 st.title('Wordle Game - Guess the Word!')
@@ -120,17 +126,22 @@ if user_name:
             cols = st.columns(len(row))
             for idx, letter in enumerate(row):
                 button_color = 'lightgrey' if letter not in st.session_state.used_letters else st.session_state.used_letters[letter]
-                if cols[idx].button(letter, key=f'keyboard_{letter}', help=f"Letter: {letter}", disabled=(st.session_state.used_letters.get(letter) == 'grey')):
+                if cols[idx].button(letter, key=f'keyboard_{letter}_{st.session_state.key_count}', help=f"Letter: {letter}", disabled=(st.session_state.used_letters.get(letter) == 'grey')):
                     if len(st.session_state.current_guess) < WORD_LENGTH:
                         st.session_state.current_guess += letter
+                        st.session_state.key_count += 1
+st.experimental_set_query_params(updated=str(st.session_state.key_count))
+                        
 
         # Delete button
-        if st.button("Delete"):
+        if st.button("Delete", key=f'delete_{st.session_state.key_count}'):
             if len(st.session_state.current_guess) > 0:
                 st.session_state.current_guess = st.session_state.current_guess[:-1]
+                st.session_state.key_count += 1
+                st.experimental_rerun()
 
         # Submit guess button
-        if st.button("Submit Guess") and len(st.session_state.current_guess) == WORD_LENGTH:
+        if st.button("Submit Guess", key=f'submit_{st.session_state.key_count}') and len(st.session_state.current_guess) == WORD_LENGTH:
             current_guess = st.session_state.current_guess
             attempt = st.session_state.attempts
 
@@ -164,6 +175,7 @@ if user_name:
 
                 # Mark the game as complete
                 st.session_state.game_complete = True
+                st.experimental_rerun()
 
     # Keep the congratulations or error message visible
     if st.session_state.game_complete:
