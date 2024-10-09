@@ -1,22 +1,10 @@
 import streamlit as st
 import time
-import pandas as pd
-import os
 
 # Constants for the Wordle game
 WORD = 'AMBER'
 MAX_ATTEMPTS = 6
 WORD_LENGTH = 5
-
-# CSV file for storing user data
-DB_FILE = 'wordle_db.csv'
-
-# Create or load database
-if not os.path.exists(DB_FILE):
-    df = pd.DataFrame(columns=['name', 'attempts', 'time_taken'])
-    df.to_csv(DB_FILE, index=False)
-else:
-    df = pd.read_csv(DB_FILE)
 
 # Function to check the guess and return feedback
 def check_guess(guess, word):
@@ -36,13 +24,6 @@ def check_guess(guess, word):
             word_chars[word_chars.index(guess[i])] = None  # Mark the character as used
 
     return feedback
-
-# Function to log user data
-def log_data(name, attempts, time_taken):
-    global df
-    new_data = pd.DataFrame([[name, attempts, time_taken]], columns=['name', 'attempts', 'time_taken'])
-    df = pd.concat([df, new_data], ignore_index=True)
-    df.to_csv(DB_FILE, index=False)
 
 # Initialize session state variables
 if 'attempts' not in st.session_state:
@@ -142,14 +123,11 @@ if user_name:
                 if cols[idx].button(letter, key=letter, help=f"Letter: {letter}", disabled=(st.session_state.used_letters.get(letter) == 'grey')):
                     if len(st.session_state.current_guess) < WORD_LENGTH:
                         st.session_state.current_guess += letter
-                        # Update immediately after pressing a letter
-                        st.experimental_rerun()
 
         # Delete button
         if st.button("Delete"):
             if len(st.session_state.current_guess) > 0:
                 st.session_state.current_guess = st.session_state.current_guess[:-1]
-                st.experimental_rerun()
 
         # Submit guess button
         if st.button("Submit Guess") and len(st.session_state.current_guess) == WORD_LENGTH:
@@ -177,7 +155,6 @@ if user_name:
             if current_guess == WORD or st.session_state.attempts == MAX_ATTEMPTS:
                 end_time = time.time()
                 time_taken = end_time - st.session_state.start_time
-                log_data(user_name, st.session_state.attempts, time_taken)
 
                 if current_guess == WORD:
                     st.balloons()  # Add balloons as a celebratory effect
@@ -187,9 +164,6 @@ if user_name:
 
                 # Mark the game as complete
                 st.session_state.game_complete = True
-
-            # Redraw immediately to update the keyboard and display the congratulations message
-            st.experimental_rerun()
 
     # Keep the congratulations or error message visible
     if st.session_state.game_complete:
