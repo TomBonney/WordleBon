@@ -21,7 +21,8 @@ def check_guess(guess, word):
     for i in range(len(guess)):
         if feedback[i] == '⬛' and guess[i] in word_chars:
             feedback[i] = '🟨'
-            word_chars[word_chars.index(guess[i])] = None  # Mark the character as used
+            # Remove the first occurrence of the letter in word_chars
+            word_chars[word_chars.index(guess[i])] = None
 
     return feedback
 
@@ -172,7 +173,7 @@ if user_name:
         st.button("Delete", on_click=delete_letter)
 
         # Submit guess button
-        st.button("Submit Guess", on_click=submit_guess)  # This now updates the UI immediately after submission
+        st.button("Submit Guess", on_click=submit_guess)
 
     # Keep the congratulations or error message visible
     if st.session_state.game_complete:
@@ -203,3 +204,4 @@ if user_name:
                         {letter}
                     </div>
                     """, unsafe_allow_html=True)
+
