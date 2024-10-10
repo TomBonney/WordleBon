@@ -9,20 +9,21 @@ WORD_LENGTH = 5
 # Function to check the guess and return feedback
 def check_guess(guess, word):
     feedback = ['⬛'] * len(guess)  # Default to incorrect (grey)
-    word_chars = list(word)
+    word_chars = list(word)         # Copy of the target word as a list of characters
+    guess_used = [False] * len(guess)  # To track letters already marked in guess
 
-    # Check for correct letters in correct positions (green)
+    # First pass: Check for correct letters in correct positions (green)
     for i in range(len(guess)):
         if guess[i] == word[i]:
             feedback[i] = '🟩'
-            word_chars[i] = None  # Mark the character as used
+            word_chars[i] = None  # Mark this character as used
+            guess_used[i] = True  # Mark the guess character as used
 
-    # Check for correct letters in wrong positions (yellow)
+    # Second pass: Check for correct letters in wrong positions (yellow)
     for i in range(len(guess)):
-        if feedback[i] == '⬛' and guess[i] in word_chars:
+        if not guess_used[i] and guess[i] in word_chars:
             feedback[i] = '🟨'
-            # Remove the first occurrence of the letter in word_chars
-            word_chars[word_chars.index(guess[i])] = None
+            word_chars[word_chars.index(guess[i])] = None  # Mark the first available character as used
 
     return feedback
 
@@ -65,9 +66,9 @@ def submit_guess():
     for idx, letter in enumerate(current_guess):
         if feedback[idx] == '🟩':
             st.session_state.used_letters[letter] = 'green'
-        elif feedback[idx] == '🟨' and letter not in st.session_state.used_letters:
+        elif feedback[idx] == '🟨' and st.session_state.used_letters.get(letter) != 'green':
             st.session_state.used_letters[letter] = '#FFF176'  # Light yellow
-        elif feedback[idx] == '⬛':
+        elif feedback[idx] == '⬛' and letter not in st.session_state.used_letters:
             st.session_state.used_letters[letter] = 'grey'
 
     # Increment the attempts and reset the current guess
@@ -204,4 +205,3 @@ if user_name:
                         {letter}
                     </div>
                     """, unsafe_allow_html=True)
-
